@@ -14,6 +14,12 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
     get products_url
     assert_response :success
+    assert_select 'h1', 'Products'
+    assert_select '#columns #side a', minimum: 4
+    assert_select '#columns #side li', /\d\d\/\d\d\/\d\d\d\d\s-\s\d\d:\d\d:\d\d/
+    assert_select 'td a', 'Show'
+    assert_select 'td a', 'Destroy'
+    assert_select 'td a', 'Edit'
   end
 
   test "should get new" do
