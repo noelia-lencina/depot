@@ -6,4 +6,4 @@ one:
 
 two:
   product: rails 
-  order_id: one
+  order: one
