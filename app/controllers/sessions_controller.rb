@@ -1,28 +1,19 @@
-require 'test_helper'
+class SessionsController < ApplicationController
 
-class SessionsControllerTest < ActionDispatch::IntegrationTest 
+  skip_before_action :authorize
 
-  test "should prompt for login" do
-    get login_url
-    assert_response :success 
+  def create
+    user = User.find_by(name: params[:name])
+    if user&.authenticate(params[:password])
+      session[:user_id] = user.id
+      redirect_to admin_url
+    else
+      redirect_to login_url, alert: "Invalid user/password combination" 
+    end
   end
 
-  test "should login" do
-    dave = users(:one)
-    post login_url, params: { name: dave.name, password: 'secret' } 
-    assert_redirected_to admin_url
-    assert_equal dave.id, session[:user_id]
+  def destroy
+    session[:user_id] = nil
+    redirect_to store_index_url, notice: "Logged out"
   end
-
-  test "should fail login" do
-    dave = users(:one)
-    post login_url, params: { name: dave.name, password: 'wrong' } 
-    assert_redirected_to login_url
-  end
-
-  test "should logout" do
-    delete logout_url 
-    assert_redirected_to store_index_url
-  end 
-  
 end

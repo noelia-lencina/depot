@@ -1,7 +1,9 @@
 require 'test_helper'
 
 class OrderMailerTest < ActionMailer::TestCase 
+  fixtures :orders
   test "received" do
+    byebug
     mail = OrderMailer.received(orders(:one))
     assert_equal "Pragmatic Store Order Confirmation", mail.subject
     assert_equal ["dave@example.org"], mail.to
